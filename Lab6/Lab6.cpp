@@ -27,25 +27,36 @@
 
 using namespace std;
 
-int binaryToDecimal(string n);
+void binaryToDecimal(string n);
 
 int main()
 {
 	ifstream inFile;
 	inFile.open("BinaryIn.dat");
 
+	bool isGood = true;
+	string temp;
+
 	char c;
-	while (inFile.get(c))
+	do
 	{
+		inFile >> temp;
+		inFile.get(c);
+
 		cout << c << endl;
 		int s = c - '0';
-		if (s == 1 || s == 0)
+		if (s == 1 || s == 0 || isspace(c))
 		{
-			cout << "hi" << endl;
+			binaryToDecimal(temp);
+			cout << endl;
+			isGood = true;
 		}
-		else
+		else 
+		{
 			cout << "bad" << endl;
-	}
+			isGood = false;
+		}
+	} while (isGood && inFile);
 
 	inFile.close();
 
@@ -53,18 +64,18 @@ int main()
 
 }
 
-int binaryToDecimal(string n)
+void binaryToDecimal(string n)
 {
 	string num = n;
 	int dec_value = 0;
 	int base = 1;
 
 	int len = num.length();
-	for (int i = len - 1; i >= 0; i--) {
+	for (int i = len - 1; i >= 0; i--) 
+	{
 		if (num[i] == '1')
 			dec_value += base;
 		base = base * 2;
 	}
-
-	return dec_value;
+	cout << dec_value;
 }
