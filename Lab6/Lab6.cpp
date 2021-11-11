@@ -28,12 +28,12 @@
 using namespace std;
 
 int binaryToDecimal(string binary);
-string binaryChecking(string line);
+string check(string line);
 
 int main()
 {
-	ifstream inFile;
-	inFile.open("BinaryIn.dat");
+	ifstream inFile; 
+	inFile.open("BinaryIn.dat"); //opens the file
 
 	string input;
 	vector<string> binaryNumber;
@@ -41,23 +41,25 @@ int main()
 
 	while (getline(inFile, input))
 	{
-		binaryNumber.push_back(binaryChecking(input));
+		binaryNumber.push_back(check(input));
 	}
 
-	for (int i = 0; i < binaryNumber.size(); i++) 
+	cout << "Binary Number\t\tDecimal Equivalent\n";
+
+	for (int i = 0; i < binaryNumber.size(); i++) // loops through the binary numbers and runs the conversion and then outputs the results
 	{
 		numOutput = binaryToDecimal(binaryNumber[i]);
 		if (numOutput == 0) 
 		{
 			cout << "Bad digit on input" << endl;
 		}
-		else 
+		else // Prints out if the binary number is valid
 		{
-			cout << numOutput << endl;
+			cout << binaryNumber[i] << "\t\t\t" << numOutput << endl;
 		}
 	}
 
-	inFile.close();
+	inFile.close(); //closes the file
 
 	return 0;
 
@@ -79,32 +81,31 @@ int binaryToDecimal(string binaryNum) // This function turns a binary number int
 	return decimal;
 }
 
-string binaryChecking(string line)
+string check(string line)
 {
-	//declare variables
-	bool numberPassed = false;
+	bool pass = false;
 	string newLine;
-	char lineChar;
+	char c;
 
-	//loop through all the inputs and look for errors
-	for (int i = 0; i < line.length(); i++) {
-		lineChar = line.at(i);
+	for (int i = 0; i < line.length(); i++) 
+	{
+		c = line.at(i);
 
-		//check if the number 1 has passed yet
-		if (lineChar == '1') {
-			newLine.push_back(lineChar);
-			numberPassed = true;
+		if (c == '1') 
+		{
+			newLine.push_back(c);
+			pass = true;
 		}
-		//if 1 has passed then 0 can too
-		else if (lineChar == '0' && numberPassed) {
-			newLine.push_back(lineChar);
+		else if (c == '0' && pass) 
+		{
+			newLine.push_back(c);
 		}
-		//do nothin if this comes up (aka it wont be added to newLine)
-		else if (lineChar == '_' && !numberPassed) {
+		else if (c == '_' && !pass) 
+		{
 
 		}
-		//if there is a char that is not 0, 1, or _, then the number will be void
-		else if (lineChar != '0') {
+		else if (c != '0') 
+		{
 			return "Bad digit on input";
 		}
 	}
