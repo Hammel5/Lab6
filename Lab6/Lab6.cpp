@@ -21,42 +21,41 @@
 
 #include <iostream> // Allows the ability to input and output 
 #include <iomanip> // Allows to use the setw() function
-#include <cmath>
-#include <stdlib.h>
+#include <string>
+#include <vector>
 #include <fstream> // Allows for File Read and Write
 
 using namespace std;
 
-void binaryToDecimal(string n);
+int binaryToDecimal(string binary);
+string binaryChecking(string line);
 
 int main()
 {
 	ifstream inFile;
 	inFile.open("BinaryIn.dat");
 
-	bool isGood = true;
-	string temp;
+	string input;
+	vector<string> binaryNumber;
+	int numOutput;
 
-	char c;
-	do
+	while (getline(inFile, input))
 	{
-		inFile >> temp;
-		inFile.get(c);
+		binaryNumber.push_back(binaryChecking(input));
+	}
 
-		cout << c << endl;
-		int s = c - '0';
-		if (s == 1 || s == 0 || isspace(c))
+	for (int i = 0; i < binaryNumber.size(); i++) 
+	{
+		numOutput = binaryToDecimal(binaryNumber[i]);
+		if (numOutput == 0) 
 		{
-			binaryToDecimal(temp);
-			cout << endl;
-			isGood = true;
+			cout << "Bad digit on input" << endl;
 		}
 		else 
 		{
-			cout << "bad" << endl;
-			isGood = false;
+			cout << numOutput << endl;
 		}
-	} while (isGood && inFile);
+	}
 
 	inFile.close();
 
@@ -64,18 +63,50 @@ int main()
 
 }
 
-void binaryToDecimal(string n)
+int binaryToDecimal(string binaryNum) // This function turns a binary number into a decimal number
 {
-	string num = n;
-	int dec_value = 0;
+	string binary = binaryNum;
+	int decimal = 0;
 	int base = 1;
 
-	int len = num.length();
-	for (int i = len - 1; i >= 0; i--) 
+	int len = binary.length();
+	for (int i = len - 1; i >= 0; i--) //loops through the string backwards
 	{
-		if (num[i] == '1')
-			dec_value += base;
+		if (binary[i] == '1') // looks for a 1 and will continue until found
+			decimal += base;
 		base = base * 2;
 	}
-	cout << dec_value;
+	return decimal;
+}
+
+string binaryChecking(string line)
+{
+	//declare variables
+	bool numberPassed = false;
+	string newLine;
+	char lineChar;
+
+	//loop through all the inputs and look for errors
+	for (int i = 0; i < line.length(); i++) {
+		lineChar = line.at(i);
+
+		//check if the number 1 has passed yet
+		if (lineChar == '1') {
+			newLine.push_back(lineChar);
+			numberPassed = true;
+		}
+		//if 1 has passed then 0 can too
+		else if (lineChar == '0' && numberPassed) {
+			newLine.push_back(lineChar);
+		}
+		//do nothin if this comes up (aka it wont be added to newLine)
+		else if (lineChar == '_' && !numberPassed) {
+
+		}
+		//if there is a char that is not 0, 1, or _, then the number will be void
+		else if (lineChar != '0') {
+			return "Bad digit on input";
+		}
+	}
+	return newLine;
 }
